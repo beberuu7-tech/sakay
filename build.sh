@@ -13,20 +13,7 @@ python manage.py collectstatic --no-input
 
 # Run migrations
 python manage.py migrate
-
-python manage.py shell << EOF
-from myapp.models import Route
-if Route.objects.count() == 0:
-    print("Loading initial data...")
-    exit(0)
-else:
-    print("Data already exists, skipping load")
-    exit(1)
-EOF
-
-if [ $? -eq 0 ]; then
-    python manage.py loaddata db_data.json
-fi
+python manage.py load_initial_data
 # Create admin user if not exists
 python manage.py shell << END
 from django.contrib.auth.models import User
