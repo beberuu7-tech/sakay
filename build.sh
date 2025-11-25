@@ -14,6 +14,7 @@ python manage.py collectstatic --no-input
 # Run migrations
 python manage.py migrate
 
+python manage.py loaddata db_data.json --ignorenonexistent || true
 # Create admin user if not exists
 python manage.py shell << END
 from django.contrib.auth.models import User
