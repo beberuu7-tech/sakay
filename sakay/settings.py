@@ -40,7 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'myapp.middleware.ThreeTierAccessMiddleware',
+    #'myapp.middleware.ThreeTierAccessMiddleware',
 ]
 
 ROOT_URLCONF = 'sakay.urls'
