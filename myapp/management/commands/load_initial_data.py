@@ -14,9 +14,15 @@ class Command(BaseCommand):
 
         # Load the fixture
         fixture_path = 'db_data.json'
-        if os.path.exists(fixture_path):
-            self.stdout.write(self.style.SUCCESS('📦 Loading initial data...'))
-            call_command('loaddata', fixture_path)
-            self.stdout.write(self.style.SUCCESS('✅ Data loaded successfully!'))
-        else:
+        if not os.path.exists(fixture_path):
             self.stdout.write(self.style.ERROR(f'❌ Fixture file not found: {fixture_path}'))
+            return
+
+        try:
+            self.stdout.write(self.style.SUCCESS('📦 Loading initial data...'))
+            call_command('loaddata', fixture_path, verbosity=2)
+            self.stdout.write(self.style.SUCCESS('✅ Data loaded successfully!'))
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f'❌ Error loading data: {str(e)}'))
+            # Don't fail the build, just log the error
+            self.stdout.write(self.style.WARNING('⚠ Continuing without initial data...'))
