@@ -13,7 +13,7 @@ python manage.py collectstatic --no-input
 
 # Run migrations
 python manage.py migrate
-python manage.py load_initial_data
+
 # Create admin user if not exists
 python manage.py shell << END
 from django.contrib.auth.models import User
