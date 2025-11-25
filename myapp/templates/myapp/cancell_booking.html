@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancel Booking - Sakay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+        
+        nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 1rem 0;
+        }
+        
+        nav .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        nav .logo {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .warning-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .warning-icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .warning-card h1 {
+            color: #dc3545;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+        
+        .warning-card p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        
+        .booking-summary {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            text-align: left;
+        }
+        
+        .booking-summary h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-item strong {
+            color: #333;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 1rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            text-align: center;
+            transition: transform 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 5px;
+        }
+        
+        .note strong {
+            color: #856404;
+        }
+        
+        footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="{% url 'home' %}" class="logo"> Sakay</a>
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'routes_list' %}">Routes</a></li>
+                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'my_bookings' %}">My Bookings</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <a href="{% url 'booking_detail' booking.booking_id %}" class="back-link">← Back to Booking Details</a>
+        
+        <div class="warning-card">
+            <h1>Cancel Booking?</h1>
+            <p>Are you sure you want to cancel this booking? This action cannot be undone.</p>
+            
+            <div class="booking-summary">
+                <h3>Booking Summary</h3>
+                <div class="summary-item">
+                    <span>Booking ID:</span>
+                    <strong>{{ booking.booking_id }}</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Route:</span>
+                    <strong>{{ booking.route.route_name }}</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Travel Date:</span>
+                    <strong>{{ booking.booking_date }}</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Pickup:</span>
+                    <strong>{{ booking.pickup_stop.stop_name }}</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Drop-off:</span>
+                    <strong>{{ booking.dropoff_stop.stop_name }}</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Total Fare:</span>
+                    <strong style="color: #667eea; font-size: 1.2rem;">₱{{ booking.total_fare }}</strong>
+                </div>
+            </div>
+            
+            <div class="note">
+                <strong>Note:</strong> If you have already paid for this booking, a refund will be processed within 5-7 business days.
+            </div>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <div class="actions">
+                    <a href="{% url 'booking_detail' booking.booking_id %}" class="btn btn-secondary">
+                        No, Keep Booking
+                    </a>
+                    <button type="submit" class="btn btn-danger">
+                        Yes, Cancel Booking
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Sakay Transportation System. All rights reserved.</p>
+    </footer>
+</body>
+</html>

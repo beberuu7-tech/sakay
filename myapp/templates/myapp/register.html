@@ -1,0 +1,522 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration - Sakay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1A3D8F 0%, #2E8BC0 100%);
+            min-height: 100vh;
+            padding: 2rem 0;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-img {
+            height: 80px;
+            width: 80px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+        }
+        
+        .registration-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #1A3D8F 0%, #2E8BC0 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .card-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .card-header p {
+            opacity: 0.95;
+        }
+        
+        .card-body {
+            padding: 2.5rem;
+        }
+        
+        .form-section {
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .form-section:last-of-type {
+            border-bottom: none;
+        }
+        
+        .form-section h2 {
+            color: #1A3D8F;
+            margin-bottom: 1.5rem;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        .form-group label .required {
+            color: #dc3545;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.9rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #2E8BC0;
+            box-shadow: 0 0 0 3px rgba(46, 139, 192, 0.1);
+        }
+        
+        .form-control.error {
+            border-color: #dc3545;
+        }
+        
+        .form-text {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+            display: block;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            font-size: 0.85rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+        }
+        
+        .form-check-input {
+            margin-top: 0.25rem;
+            width: 20px;
+            height: 20px;
+        }
+        
+        .form-check-label {
+            font-weight: normal;
+        }
+        
+        .form-check-label a {
+            color: #2E8BC0;
+        }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, #1A3D8F 0%, #2E8BC0 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 61, 143, 0.3);
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .login-link a {
+            color: #2E8BC0;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .back-home {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .back-home a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-home a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-body {
+                padding: 1.5rem;
+            }
+
+            body {
+                padding: 1rem 0;
+            }
+        }
+                /* UNIVERSAL FIX — makes all fields clickable/visible even without classes */
+        input[type="text"],
+        input[type="password"],
+        input[type="email"],
+        input[type="date"],
+        input[type="number"],
+        input[type="file"],
+        textarea,
+        select {
+            width: 100% !important;
+            padding: 0.9rem !important;
+            border: 2px solid #e2e8f0 !important;
+            border-radius: 8px !important;
+            font-size: 1rem !important;
+            font-family: inherit !important;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-section">
+            <img src="{% static 'myapp/images/logo.png' %}" alt="Sakay Logo" class="logo-img">
+            <div class="logo-text">SAKAY</div>
+        </div>
+
+        <div class="registration-card">
+            <div class="card-header">
+                <h1> Student Registration</h1>
+                <p>Join Sakay Transportation System</p>
+            </div>
+            
+            <div class="card-body">
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+                
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <!-- Account Information -->
+                    <div class="form-section">
+                        <h2> Account Information</h2>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.username.id_for_label }}">
+                                Username <span class="required">*</span>
+                            </label>
+                            {{ form.username }}
+                            {% if form.username.errors %}
+                                <span class="error-message">{{ form.username.errors.0 }}</span>
+                            {% endif %}
+                            <small class="form-text">Choose a unique username for login</small>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.password1.id_for_label }}">
+                                    Password <span class="required">*</span>
+                                </label>
+                                {{ form.password1 }}
+                                {% if form.password1.errors %}
+                                    <span class="error-message">{{ form.password1.errors.0 }}</span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.password2.id_for_label }}">
+                                    Confirm Password <span class="required">*</span>
+                                </label>
+                                {{ form.password2 }}
+                                {% if form.password2.errors %}
+                                    <span class="error-message">{{ form.password2.errors.0 }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Personal Information -->
+                    <div class="form-section">
+                        <h2>Personal Information</h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.first_name.id_for_label }}">
+                                    First Name <span class="required">*</span>
+                                </label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}
+                                    <span class="error-message">{{ form.first_name.errors.0 }}</span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.last_name.id_for_label }}">
+                                    Last Name <span class="required">*</span>
+                                </label>
+                                {{ form.last_name }}
+                                {% if form.last_name.errors %}
+                                    <span class="error-message">{{ form.last_name.errors.0 }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.student_id.id_for_label }}">
+                                    Student ID <span class="required">*</span>
+                                </label>
+                                {{ form.student_id }}
+                                {% if form.student_id.errors %}
+                                    <span class="error-message">{{ form.student_id.errors.0 }}</span>
+                                {% endif %}
+                                <small class="form-text">{{ form.student_id.help_text }}</small>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.date_of_birth.id_for_label }}">
+                                    Date of Birth <span class="required">*</span>
+                                </label>
+                                {{ form.date_of_birth }}
+                                {% if form.date_of_birth.errors %}
+                                    <span class="error-message">{{ form.date_of_birth.errors.0 }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.email.id_for_label }}">
+                                    Email Address <span class="required">*</span>
+                                </label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <span class="error-message">{{ form.email.errors.0 }}</span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.phone_number.id_for_label }}">
+                                    Phone Number <span class="required">*</span>
+                                </label>
+                                {{ form.phone_number }}
+                                {% if form.phone_number.errors %}
+                                    <span class="error-message">{{ form.phone_number.errors.0 }}</span>
+                                {% endif %}
+                                <small class="form-text">{{ form.phone_number.help_text }}</small>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.address.id_for_label }}">
+                                Complete Address <span class="required">*</span>
+                            </label>
+                            {{ form.address }}
+                            {% if form.address.errors %}
+                                <span class="error-message">{{ form.address.errors.0 }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.profile_picture.id_for_label }}">
+                                Profile Picture
+                            </label>
+                            {{ form.profile_picture }}
+                            {% if form.profile_picture.errors %}
+                                <span class="error-message">{{ form.profile_picture.errors.0 }}</span>
+                            {% endif %}
+                            <small class="form-text">{{ form.profile_picture.help_text }}</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Guardian Information -->
+                    <div class="form-section">
+                        <h2> Guardian Information</h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.guardian_name.id_for_label }}">
+                                    Guardian Name <span class="required">*</span>
+                                </label>
+                                {{ form.guardian_name }}
+                                {% if form.guardian_name.errors %}
+                                    <span class="error-message">{{ form.guardian_name.errors.0 }}</span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.guardian_relationship.id_for_label }}">
+                                    Relationship <span class="required">*</span>
+                                </label>
+                                {{ form.guardian_relationship }}
+                                {% if form.guardian_relationship.errors %}
+                                    <span class="error-message">{{ form.guardian_relationship.errors.0 }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.guardian_contact.id_for_label }}">
+                                Guardian Contact Number <span class="required">*</span>
+                            </label>
+                            {{ form.guardian_contact }}
+                            {% if form.guardian_contact.errors %}
+                                <span class="error-message">{{ form.guardian_contact.errors.0 }}</span>
+                            {% endif %}
+                            <small class="form-text">{{ form.guardian_contact.help_text }}</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Emergency Contact -->
+                    <div class="form-section">
+                        <h2> Emergency Contact</h2>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.emergency_contact_name.id_for_label }}">
+                                    Emergency Contact Name <span class="required">*</span>
+                                </label>
+                                {{ form.emergency_contact_name }}
+                                {% if form.emergency_contact_name.errors %}
+                                    <span class="error-message">{{ form.emergency_contact_name.errors.0 }}</span>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.emergency_contact_relationship.id_for_label }}">
+                                    Relationship <span class="required">*</span>
+                                </label>
+                                {{ form.emergency_contact_relationship }}
+                                {% if form.emergency_contact_relationship.errors %}
+                                    <span class="error-message">{{ form.emergency_contact_relationship.errors.0 }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.emergency_contact_number.id_for_label }}">
+                                Emergency Contact Number <span class="required">*</span>
+                            </label>
+                            {{ form.emergency_contact_number }}
+                            {% if form.emergency_contact_number.errors %}
+                                <span class="error-message">{{ form.emergency_contact_number.errors.0 }}</span>
+                            {% endif %}
+                            <small class="form-text">{{ form.emergency_contact_number.help_text }}</small>
+                        </div>
+                    </div>
+                    
+                    <!-- Terms and Conditions -->
+                    <div class="form-section">
+                        <div class="form-check">
+                            {{ form.accept_terms }}
+                            <label for="{{ form.accept_terms.id_for_label }}" class="form-check-label">
+                                I accept the <a href="#">terms and conditions</a> and privacy policy <span class="required">*</span>
+                            </label>
+                        </div>
+                        {% if form.accept_terms.errors %}
+                            <span class="error-message">{{ form.accept_terms.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <button type="submit" class="btn-submit">Create My Account</button>
+                </form>
+                
+                <div class="login-link">
+                    Already have an account? <a href="{% url 'login' %}">Login here</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-home">
+            <a href="{% url 'home' %}">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

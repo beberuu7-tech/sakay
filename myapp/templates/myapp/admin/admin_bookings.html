@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Bookings - Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; }
+        .navbar { background: #DC143C; padding: 1rem 2rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; font-weight: 500; }
+        .container { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
+        .page-header { background: linear-gradient(135deg, #DC143C, #A01028); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; }
+        .bookings-table { width: 100%; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        th { background: #f8fafc; color: #DC143C; font-weight: 600; }
+        tr:hover { background: #f8fafc; }
+        .status-badge { padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 600; }
+        .status-badge.PENDING { background: #fff3cd; color: #856404; }
+        .status-badge.CONFIRMED { background: #d4edda; color: #155724; }
+        .status-badge.CANCELLED { background: #f8d7da; color: #721c24; }
+        .status-badge.COMPLETED { background: #d1ecf1; color: #0c5460; }
+        .btn { padding: 0.5rem 1rem; border-radius: 6px; text-decoration: none; font-weight: 600; margin: 0 0.25rem; }
+        .btn-view { background: #0d6efd; color: white; }
+        .btn-confirm { background: #28a745; color: white; }
+        .empty-state { text-align: center; padding: 4rem; color: #64748b; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'admin_dashboard' %}">🚌 SAKAY ADMIN</a>
+        <a href="{% url 'admin_bookings' %}">Bookings</a>
+        <a href="{% url 'admin_routes' %}">Routes</a>
+        <a href="{% url 'admin_students' %}">Students</a>
+        <a href="{% url 'admin_drivers' %}">Drivers</a>
+        <a href="{% url 'admin_vehicles' %}">Vehicles</a>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1> Manage Bookings</h1>
+            <p>View and manage all transportation bookings</p>
+        </div>
+
+        {% if bookings %}
+        <div class="bookings-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Student</th>
+                        <th>Route</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Fare</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for booking in bookings %}
+                    <tr>
+                        <td><strong>{{ booking.booking_id }}</strong></td>
+                        <td>{{ booking.student.user.get_full_name }}</td>
+                        <td>{{ booking.route.route_name }}</td>
+                        <td>{{ booking.booking_date }}</td>
+                        <td><span class="status-badge {{ booking.status }}">{{ booking.get_status_display }}</span></td>
+                        <td><strong>₱{{ booking.total_fare }}</strong></td>
+                        <td>
+                            <a href="{% url 'admin_booking_detail' booking.booking_id %}" class="btn btn-view">View</a>
+                            {% if booking.status == 'PENDING' %}
+                            <a href="{% url 'admin_confirm_booking' booking.booking_id %}" class="btn btn-confirm">Confirm</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h2> No Bookings Yet</h2>
+            <p>No bookings have been made yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

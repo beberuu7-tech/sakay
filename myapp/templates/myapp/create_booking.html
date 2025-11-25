@@ -1,0 +1,436 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book {{ route.route_name }} - Sakay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #1a1a1a;
+            background: #f5f7fa;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: #1A3D8F;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: inherit;
+            padding: 0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2E8BC0;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .back-link:hover {
+            color: #1A3D8F;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #1A3D8F 0%, #2E8BC0 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            opacity: 0.95;
+        }
+
+        /* Alert */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        /* Form Card */
+        .form-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #1A3D8F;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #2E8BC0;
+            box-shadow: 0 0 0 3px rgba(46, 139, 192, 0.1);
+        }
+
+        .form-text {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+            display: block;
+        }
+
+        /* Summary Box */
+        .summary-box {
+            background: linear-gradient(135deg, #f8fafc 0%, #e8f4f8 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 2px solid #2E8BC0;
+        }
+
+        .summary-box h3 {
+            color: #1A3D8F;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #cbd5e1;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #1A3D8F;
+            padding-top: 1rem;
+            margin-top: 0.5rem;
+            border-top: 2px solid #2E8BC0;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 1.2rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, #1A3D8F 0%, #2E8BC0 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(26, 61, 143, 0.3);
+        }
+
+        .btn-secondary {
+            width: 100%;
+            background: #6c757d;
+            color: white;
+            margin-top: 1rem;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f1f3d;
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .form-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="logo-section">
+                <img src="{% static 'myapp/images/logo.png' %}" alt="Sakay Logo" class="logo-img">
+                <span class="logo-text">SAKAY</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'routes_list' %}">Routes</a></li>
+                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li>
+                    <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <a href="{% url 'route_detail' route.route_code %}" class="back-link">
+            ← Back to Route Details
+        </a>
+
+        <div class="page-header">
+            <h1> Book Your Trip</h1>
+            <p>{{ route.route_name }}</p>
+        </div>
+
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="form-card">
+            <form method="POST" id="bookingForm">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="schedule" class="form-label">Select Schedule</label>
+                    <select name="schedule" id="schedule" class="form-select" required>
+                        <option value="">Choose a schedule...</option>
+                        {% for schedule in schedules %}
+                        <option value="{{ schedule.id }}">
+                            {{ schedule.get_day_of_week_display }} - 
+                            {{ schedule.departure_time }} to {{ schedule.arrival_time }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-text">Select the day and time for your trip</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="booking_date" class="form-label"> Travel Date</label>
+                    <input type="date" name="booking_date" id="booking_date" class="form-input" required>
+                    <small class="form-text">When do you want to travel?</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="pickup_stop" class="form-label"> Pickup Stop</label>
+                    <select name="pickup_stop" id="pickup_stop" class="form-select" required>
+                        <option value="">Choose pickup location...</option>
+                        {% for stop in stops %}
+                        <option value="{{ stop.id }}">
+                            Stop {{ stop.stop_order }}: {{ stop.stop_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-text">Where should we pick you up?</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="dropoff_stop" class="form-label"> Drop-off Stop</label>
+                    <select name="dropoff_stop" id="dropoff_stop" class="form-select" required>
+                        <option value="">Choose drop-off location...</option>
+                        {% for stop in stops %}
+                        <option value="{{ stop.id }}">
+                            Stop {{ stop.stop_order }}: {{ stop.stop_name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-text">Where do you want to be dropped off?</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="seats" class="form-label">🪑 Number of Seats</label>
+                    <input type="number" name="seats" id="seats" value="1" min="1" max="5" class="form-input" required>
+                    <small class="form-text">How many seats do you need?</small>
+                </div>
+
+                <div class="summary-box">
+                    <h3> Booking Summary</h3>
+                    <div class="summary-item">
+                        <span>Route:</span>
+                        <span>{{ route.route_name }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Base Fare:</span>
+                        <span>₱{{ route.fare }}</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Seats:</span>
+                        <span id="seatCount">1</span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Total Amount:</span>
+                        <span id="totalFare">₱{{ route.fare }}</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                <a href="{% url 'route_detail' route.route_code %}" class="btn btn-secondary"> Cancel</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Sakay Transportation System. All rights reserved.</p>
+            <p>Your Trusted Booking Companion</p>
+        </div>
+    </footer>
+
+    <script>
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('booking_date').min = today;
+        document.getElementById('booking_date').value = today;
+
+        // Calculate total fare dynamically
+        const baseFare = {{ route.fare }};
+        const seatsInput = document.getElementById('seats');
+        const seatCount = document.getElementById('seatCount');
+        const totalFare = document.getElementById('totalFare');
+
+        seatsInput.addEventListener('input', function() {
+            const seats = parseInt(this.value) || 1;
+            const total = baseFare * seats;
+            seatCount.textContent = seats;
+            totalFare.textContent = '₱' + total.toFixed(2);
+        });
+    </script>
+</body>
+</html>

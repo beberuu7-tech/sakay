@@ -1,0 +1,498 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking {{ booking.booking_id }} - Sakay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #1a1a1a;
+            background: #f5f7fa;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: #1A3D8F;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: inherit;
+            padding: 0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #2E8BC0;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 2rem;
+        }
+
+        .back-link:hover {
+            color: #1A3D8F;
+        }
+
+        /* Booking Header */
+        .booking-header {
+            background: linear-gradient(135deg, #1A3D8F 0%, #2E8BC0 100%);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .booking-header h1 {
+            font-size: 2rem;
+        }
+
+        .status-badge {
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Card */
+        .card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .card h2 {
+            color: #1A3D8F;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            padding: 1.2rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #2E8BC0;
+        }
+
+        .info-item .label {
+            font-weight: 600;
+            color: #1A3D8F;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .info-item .value {
+            font-size: 1.1rem;
+        }
+
+        /* Payment Section */
+        .payment-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .payment-item {
+            padding: 1.2rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .payment-item .label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+
+        .payment-item .value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1A3D8F;
+        }
+
+        .payment-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .payment-status.PENDING {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .payment-status.COMPLETED {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .payment-status.FAILED {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Fare Total */
+        .fare-total {
+            background: linear-gradient(135deg, #1A3D8F 0%, #2E8BC0 100%);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .fare-total h3 {
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .fare-total .amount {
+            font-size: 4rem;
+            font-weight: 700;
+        }
+
+        /* Actions */
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 1.2rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1A3D8F 0%, #2E8BC0 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 61, 143, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f1f3d;
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="logo-section">
+                <img src="{% static 'myapp/images/logo.png' %}" alt="Sakay Logo" class="logo-img">
+                <span class="logo-text">SAKAY</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'routes_list' %}">Routes</a></li>
+                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'my_bookings' %}">My Bookings</a></li>
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li>
+                    <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <a href="{% url 'my_bookings' %}" class="back-link">
+            ← Back to My Bookings
+        </a>
+
+        <div class="booking-header">
+            <div>
+                <h1> Booking Details</h1>
+                <p>{{ booking.booking_id }}</p>
+            </div>
+            <span class="status-badge">{{ booking.get_status_display }}</span>
+        </div>
+
+        <!-- Trip Information -->
+        <div class="card">
+            <h2> Trip Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">Route</span>
+                    <div class="value">{{ booking.route.route_name }}</div>
+                </div>
+
+                <div class="info-item">
+                    <span class="label">Travel Date</span>
+                    <div class="value">{{ booking.booking_date }}</div>
+                </div>
+
+                <div class="info-item">
+                    <span class="label">Schedule</span>
+                    <div class="value">
+                        {{ booking.schedule.get_day_of_week_display }}<br>
+                        {{ booking.schedule.departure_time }} - {{ booking.schedule.arrival_time }}
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <span class="label">Seats Booked</span>
+                    <div class="value">{{ booking.seats_booked }}</div>
+                </div>
+
+                <div class="info-item">
+                    <span class="label">Pickup Point</span>
+                    <div class="value">{{ booking.pickup_stop.stop_name }}</div>
+                </div>
+
+                <div class="info-item">
+                    <span class="label">Drop-off Point</span>
+                    <div class="value">{{ booking.dropoff_stop.stop_name }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vehicle Information -->
+        <div class="card">
+            <h2>Vehicle Details</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="label">Vehicle Type</span>
+                    <div class="value">{{ booking.route.vehicle.vehicle_type }}</div>
+                </div>
+
+                <div class="info-item">
+                    <span class="label">Plate Number</span>
+                    <div class="value">{{ booking.route.vehicle.plate_number }}</div>
+                </div>
+
+                <div class="info-item">
+                    <span class="label">Model</span>
+                    <div class="value">{{ booking.route.vehicle.model }}</div>
+                </div>
+
+                <div class="info-item">
+                    <span class="label">Color</span>
+                    <div class="value">{{ booking.route.vehicle.color }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Information -->
+        <div class="card">
+            <h2>Payment Information</h2>
+            {% if payment %}
+            <div class="payment-section">
+                <div class="payment-item">
+                    <div class="label">Payment ID</div>
+                    <div class="value" style="font-size: 0.9rem;">{{ payment.payment_id }}</div>
+                </div>
+
+                <div class="payment-item">
+                    <div class="label">Payment Method</div>
+                    <div class="value">{{ payment.get_payment_method_display }}</div>
+                </div>
+
+                <div class="payment-item">
+                    <div class="label">Status</div>
+                    <div class="value">
+                        <span class="payment-status {{ payment.payment_status }}">
+                            {{ payment.get_payment_status_display }}
+                        </span>
+                    </div>
+                </div>
+
+                {% if payment.payment_date %}
+                <div class="payment-item">
+                    <div class="label">Payment Date</div>
+                    <div class="value" style="font-size: 0.9rem;">{{ payment.payment_date|date:"M d, Y H:i" }}</div>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <p style="color: #64748b; text-align: center; padding: 2rem;">No payment information available.</p>
+            {% endif %}
+        </div>
+
+        <!-- Total Fare -->
+        <div class="fare-total">
+            <h3> Total Fare</h3>
+            <div class="amount">₱{{ booking.total_fare }}</div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions">
+            <a href="{% url 'my_bookings' %}" class="btn btn-secondary">← Back to Bookings</a>
+            {% if booking.status == 'PENDING' or booking.status == 'CONFIRMED' %}
+            <a href="{% url 'cancel_booking' booking.booking_id %}" class="btn btn-danger">❌ Cancel Booking</a>
+            {% endif %}
+        </div>
+
+        {% if booking.notes %}
+        <div class="card">
+            <h2> Additional Notes</h2>
+            <p>{{ booking.notes }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Sakay Transportation System. All rights reserved.</p>
+            <p>Your Trusted Booking Companion</p>
+        </div>
+    </footer>
+</body>
+</html>

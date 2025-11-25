@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Earnings - Driver</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; }
+        .navbar { background: #FF8C00; padding: 1rem 2rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; font-weight: 500; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 2rem; }
+        .page-header { background: linear-gradient(135deg, #FF8C00, #FF6B00); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; text-align: center; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; }
+        .stat-card .number { font-size: 2.5rem; font-weight: 700; color: #FF8C00; margin-bottom: 0.5rem; }
+        .stat-card .label { color: #64748b; font-weight: 500; }
+        .earnings-card { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 2rem; }
+        .earnings-card h3 { color: #FF8C00; margin-bottom: 1.5rem; }
+        .earnings-item { display: flex; justify-content: space-between; padding: 1rem; background: #f8fafc; border-radius: 8px; margin-bottom: 0.75rem; }
+        .earnings-item:hover { background: #e8f4f8; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'driver_dashboard' %}">🚌 SAKAY DRIVER</a>
+        <a href="{% url 'driver_trips' %}">Trips</a>
+        <a href="{% url 'driver_schedule' %}">Schedule</a>
+        <a href="{% url 'driver_earnings' %}">Earnings</a>
+        <a href="{% url 'driver_profile' %}">Profile</a>
+    </div>
+    <div class="container">
+        <div class="page-header">
+            <h1>💰 My Earnings</h1>
+            <p>Track your income and completed trips</p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="number">₱{{ total_earnings|default:"0" }}</div>
+                <div class="label">Total Earnings</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">{{ completed_trips }}</div>
+                <div class="label">Completed Trips</div>
+            </div>
+            <div class="stat-card">
+                <div class="number">₱{{ total_earnings|default:"0"|floatformat:0|add:"0"|divisibleby:completed_trips|default:"0" }}</div>
+                <div class="label">Average Per Trip</div>
+            </div>
+        </div>
+        <div class="earnings-card">
+            <h3>📊 Monthly Earnings Breakdown</h3>
+            {% if monthly_earnings %}
+                {% for item in monthly_earnings %}
+                <div class="earnings-item">
+                    <span><strong>{{ item.month|date:"F Y" }}</strong></span>
+                    <span style="color: #FF8C00; font-weight: 700; font-size: 1.2rem;">₱{{ item.total }}</span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div style="text-align: center; padding: 3rem; color: #64748b;">
+                    <p>No earnings recorded yet</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

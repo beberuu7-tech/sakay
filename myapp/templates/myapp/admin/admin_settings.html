@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms & Conditions - Sakay</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; }
+        .navbar { background: #1A3D8F; padding: 1rem 2rem; }
+        .navbar a { color: white; text-decoration: none; font-weight: 600; font-size: 1.5rem; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        h1 { color: #1A3D8F; margin-bottom: 2rem; }
+        h2 { color: #1A3D8F; margin-top: 2rem; margin-bottom: 1rem; }
+        p { line-height: 1.8; margin-bottom: 1rem; color: #333; }
+        ul { margin-left: 2rem; margin-bottom: 1rem; }
+        li { margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'home' %}"> SAKAY</a>
+    </div>
+
+    <div class="container">
+        <h1>Terms and Conditions</h1>
+        <p><strong>Last Updated:</strong> November 24, 2025</p>
+
+        <h2>1. Acceptance of Terms</h2>
+        <p>By accessing and using the Sakay Transportation System, you accept and agree to be bound by these terms and conditions.</p>
+
+        <h2>2. User Accounts</h2>
+        <p>You are responsible for maintaining the confidentiality of your account and password. You must provide accurate information during registration.</p>
+
+        <h2>3. Booking and Payments</h2>
+        <ul>
+            <li>All bookings are subject to availability</li>
+            <li>Payment must be made according to the selected payment method</li>
+            <li>Cancellation policies apply as per our guidelines</li>
+            <li>Refunds are processed within 5-7 business days</li>
+        </ul>
+
+        <h2>4. User Conduct</h2>
+        <p>Users must conduct themselves respectfully. Prohibited activities include:</p>
+        <ul>
+            <li>Providing false information</li>
+            <li>Harassment of drivers or other passengers</li>
+            <li>Damage to vehicles</li>
+            <li>Any illegal activities</li>
+        </ul>
+
+        <h2>5. Privacy</h2>
+        <p>We collect and use your personal data in accordance with our Privacy Policy. Your data is protected and never shared without consent.</p>
+
+        <h2>6. Liability</h2>
+        <p>Sakay strives to provide safe and reliable transportation but is not liable for delays, cancellations due to unforeseen circumstances, or indirect damages.</p>
+
+        <h2>7. Changes to Terms</h2>
+        <p>We reserve the right to modify these terms at any time. Continued use of our services constitutes acceptance of updated terms.</p>
+
+        <h2>8. Contact</h2>
+        <p>For questions about these terms, contact us at: support@sakay.ph</p>
+
+        <a href="javascript:history.back()" style="display: inline-block; margin-top: 2rem; color: #1A3D8F; text-decoration: none; font-weight: 600;">← Back</a>
+    </div>
+</body>
+</html>

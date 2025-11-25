@@ -1,0 +1,645 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Dashboard - Sakay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #1a1a1a;
+            background: #f5f7fa;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: #FF8C00;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .driver-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #FFF;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: inherit;
+            padding: 0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Welcome Section */
+        .welcome {
+            background: linear-gradient(135deg, #FF8C00 0%, #FF6B00 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .welcome h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome p {
+            opacity: 0.9;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card .number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #FF8C00;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-card .label {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* Vehicle Info Card */
+        .vehicle-card {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe5cc 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            border: 3px solid #FF8C00;
+        }
+
+        .vehicle-card h2 {
+            color: #FF8C00;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .vehicle-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .vehicle-info-item {
+            background: white;
+            padding: 1.2rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .vehicle-info-item .label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+
+        .vehicle-info-item .value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #FF8C00;
+        }
+
+        /* Section */
+        .section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .section h2 {
+            color: #FF8C00;
+            font-size: 1.5rem;
+        }
+
+        /* Trip Cards */
+        .trip-card {
+            border: 2px solid #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .trip-card:hover {
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-color: #FF8C00;
+        }
+
+        .trip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .trip-route {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #FF8C00;
+        }
+
+        .status-badge {
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-badge.SCHEDULED {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.IN_PROGRESS {
+            background: #cfe2ff;
+            color: #084298;
+        }
+
+        .status-badge.COMPLETED {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .trip-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .trip-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .trip-detail-item .icon {
+            font-size: 1.3rem;
+        }
+
+        .trip-detail-item strong {
+            color: #FF8C00;
+        }
+
+        .trip-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF8C00 0%, #FF6B00 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* Passengers List */
+        .passengers-list {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .passengers-list h4 {
+            color: #FF8C00;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .passenger-item {
+            padding: 0.75rem;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .passenger-item:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .action-card {
+            background: #f8fafc;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .action-card:hover {
+            background: white;
+            border-color: #FF8C00;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .action-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .action-card .label {
+            font-weight: 600;
+            color: #FF8C00;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .empty-state h3 {
+            color: #FF8C00;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            color: #64748b;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f1f3d;
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .trip-details {
+                grid-template-columns: 1fr;
+            }
+
+            .trip-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'driver_dashboard' %}" class="logo-section">
+                <img src="{% static 'myapp/images/logo.png' %}" alt="Sakay Logo" class="logo-img">
+                <span class="logo-text">SAKAY<span class="driver-badge">DRIVER</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'driver_dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'driver_trips' %}">My Trips</a></li>
+                <li><a href="{% url 'driver_schedule' %}">Schedule</a></li>
+                <li><a href="{% url 'driver_earnings' %}">Earnings</a></li>
+                <li><a href="{% url 'driver_profile' %}">Profile</a></li>
+                <li>
+                    <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Welcome -->
+        <div class="welcome">
+            <h1>Welcome, {{ driver.user.get_full_name }}! 🚐</h1>
+            <p>Driver ID: {{ driver.driver_id }} | License: {{ driver.license_number }}</p>
+        </div>
+
+        <!-- Vehicle Info -->
+        <div class="vehicle-card">
+            <h2>🚐 Your Assigned Vehicle</h2>
+            <div class="vehicle-info-grid">
+                <div class="vehicle-info-item">
+                    <div class="label">Vehicle Type</div>
+                    <div class="value">{{ driver.vehicle.vehicle_type }}</div>
+                </div>
+                <div class="vehicle-info-item">
+                    <div class="label">Plate Number</div>
+                    <div class="value">{{ driver.vehicle.plate_number }}</div>
+                </div>
+                <div class="vehicle-info-item">
+                    <div class="label">Model</div>
+                    <div class="value">{{ driver.vehicle.model }}</div>
+                </div>
+                <div class="vehicle-info-item">
+                    <div class="label">Capacity</div>
+                    <div class="value">{{ driver.vehicle.capacity }} seats</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="icon">📋</div>
+                <div class="number">{{ today_trips }}</div>
+                <div class="label">Today's Trips</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">👥</div>
+                <div class="number">{{ today_passengers }}</div>
+                <div class="label">Passengers Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">✅</div>
+                <div class="number">{{ completed_trips }}</div>
+                <div class="label">Completed Trips</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">💰</div>
+                <div class="number">₱{{ total_earnings|default:"0" }}</div>
+                <div class="label">Total Earnings</div>
+            </div>
+        </div>
+
+        <!-- Today's Trips -->
+        <div class="section">
+            <div class="section-header">
+                <h2>🚀 Today's Trips</h2>
+            </div>
+
+            {% if trips %}
+                {% for trip in trips %}
+                <div class="trip-card">
+                    <div class="trip-header">
+                        <div class="trip-route">{{ trip.route.route_name }}</div>
+                        <span class="status-badge {{ trip.status }}">{{ trip.get_status_display }}</span>
+                    </div>
+
+                    <div class="trip-details">
+                        <div class="trip-detail-item">
+                            <span class="icon">🚀</span>
+                            <div><strong>From:</strong> {{ trip.route.origin }}</div>
+                        </div>
+                        <div class="trip-detail-item">
+                            <span class="icon">🎯</span>
+                            <div><strong>To:</strong> {{ trip.route.destination }}</div>
+                        </div>
+                        <div class="trip-detail-item">
+                            <span class="icon">⏰</span>
+                            <div><strong>Departure:</strong> {{ trip.schedule.departure_time }}</div>
+                        </div>
+                        <div class="trip-detail-item">
+                            <span class="icon">👥</span>
+                            <div><strong>Passengers:</strong> {{ trip.bookings.count }}</div>
+                        </div>
+                    </div>
+
+                    {% if trip.bookings.exists %}
+                    <div class="passengers-list">
+                        <h4>📋 Passenger List</h4>
+                        {% for booking in trip.bookings.all %}
+                        <div class="passenger-item">
+                            <div>
+                                <strong>{{ booking.student.user.get_full_name }}</strong>
+                                <br>
+                                <small>{{ booking.pickup_stop.stop_name }} → {{ booking.dropoff_stop.stop_name }}</small>
+                            </div>
+                            <span>{{ booking.seats_booked }} seat(s)</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <div class="trip-actions">
+                        <a href="{% url 'driver_trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
+                        {% if trip.status == 'SCHEDULED' %}
+                        <a href="{% url 'driver_start_trip' trip.id %}" class="btn btn-success">Start Trip</a>
+                        {% elif trip.status == 'IN_PROGRESS' %}
+                        <a href="{% url 'driver_complete_trip' trip.id %}" class="btn btn-success">Complete Trip</a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <div class="icon">🚐</div>
+                    <h3>No Trips Scheduled</h3>
+                    <p>You don't have any trips scheduled for today</p>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="section">
+            <div class="section-header">
+                <h2>⚡ Quick Actions</h2>
+            </div>
+            <div class="quick-actions">
+                <a href="{% url 'driver_trips' %}" class="action-card">
+                    <div class="icon">📋</div>
+                    <div class="label">View All Trips</div>
+                </a>
+                <a href="{% url 'driver_schedule' %}" class="action-card">
+                    <div class="icon">📅</div>
+                    <div class="label">My Schedule</div>
+                </a>
+                <a href="{% url 'driver_earnings' %}" class="action-card">
+                    <div class="icon">💰</div>
+                    <div class="label">View Earnings</div>
+                </a>
+                <a href="{% url 'driver_profile' %}" class="action-card">
+                    <div class="icon">👤</div>
+                    <div class="label">My Profile</div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Sakay Transportation System. All rights reserved.</p>
+            <p>Driver Portal - Drive Safe, Arrive Safe</p>
+        </div>
+    </footer>
+</body>
+</html>

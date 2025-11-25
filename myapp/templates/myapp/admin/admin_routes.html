@@ -1,0 +1,336 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Routes - Admin</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            color: #1a1a1a;
+        }
+
+        .navbar {
+            background: #DC143C;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #DC143C 0%, #A01028 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+        }
+
+        .btn-add {
+            padding: 1rem 2rem;
+            background: white;
+            color: #DC143C;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .routes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .route-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .route-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        }
+
+        .route-header {
+            background: linear-gradient(135deg, #DC143C 0%, #A01028 100%);
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .route-header h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .route-code {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 0.85rem;
+        }
+
+        .route-body {
+            padding: 1.5rem;
+        }
+
+        .route-info {
+            display: grid;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-radius: 6px;
+        }
+
+        .info-row strong {
+            color: #DC143C;
+        }
+
+        .route-status {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .route-actions {
+            display: flex;
+            gap: 0.75rem;
+            padding-top: 1rem;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.75rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .btn-toggle {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .empty-state .icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .routes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'admin_dashboard' %}" class="logo-text">🚍 SAKAY ADMIN</a>
+            <ul class="nav-links">
+                <li><a href="{% url 'admin_dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'admin_routes' %}">Routes</a></li>
+                <li><a href="{% url 'admin_bookings' %}">Bookings</a></li>
+                <li><a href="{% url 'admin_students' %}">Students</a></li>
+                <li><a href="{% url 'admin_drivers' %}">Drivers</a></li>
+                <li><a href="{% url 'admin_vehicles' %}">Vehicles</a></li>
+                <li>
+                    <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1>🗺️ Manage Routes</h1>
+                <p>View and manage all transportation routes</p>
+            </div>
+            <a href="{% url 'admin_add_route' %}" class="btn-add">➕ Add New Route</a>
+        </div>
+
+        {% if routes %}
+        <div class="routes-grid">
+            {% for route in routes %}
+            <div class="route-card">
+                <div class="route-header">
+                    <h3>{{ route.route_name }}</h3>
+                    <span class="route-code">{{ route.route_code }}</span>
+                </div>
+                <div class="route-body">
+                    <div class="route-info">
+                        <div class="info-row">
+                            <span>From:</span>
+                            <strong>{{ route.origin }}</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>To:</span>
+                            <strong>{{ route.destination }}</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>Distance:</span>
+                            <strong>{{ route.distance_km }} km</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>Fare:</span>
+                            <strong>₱{{ route.fare }}</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>Vehicle:</span>
+                            <strong>{{ route.vehicle.plate_number }}</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>Stops:</span>
+                            <strong>{{ route.stops.count }}</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>Status:</span>
+                            <span class="route-status {% if route.is_active %}status-active{% else %}status-inactive{% endif %}">
+                                {% if route.is_active %}Active{% else %}Inactive{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="route-actions">
+                        <a href="{% url 'route_detail' route.route_code %}" class="btn btn-edit">View</a>
+                        <button class="btn btn-toggle">{% if route.is_active %}Disable{% else %}Enable{% endif %}</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="icon">🗺️</div>
+            <h2 style="color: #DC143C; margin-bottom: 1rem;">No Routes Yet</h2>
+            <p style="color: #64748b; margin-bottom: 2rem;">Start by adding your first route</p>
+            <a href="{% url 'admin_add_route' %}" class="btn-add">Add Route</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

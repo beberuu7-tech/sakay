@@ -1,0 +1,405 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Sakay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #1a1a1a;
+            background: #f5f7fa;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: #1A3D8F;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: inherit;
+            padding: 0;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #1A3D8F 0%, #2E8BC0 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* Content Card */
+        .content-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 3rem;
+        }
+
+        .content-card h2 {
+            color: #1A3D8F;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .content-card p {
+            color: #1a1a1a;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Mission Vision */
+        .mission-vision {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .mv-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e8f4f8 100%);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 2px solid #2E8BC0;
+        }
+
+        .mv-card h3 {
+            color: #1A3D8F;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mv-card p {
+            color: #1a1a1a;
+            line-height: 1.7;
+        }
+
+        /* Values */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .value-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .value-card .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .value-card h4 {
+            color: #1A3D8F;
+            margin-bottom: 0.75rem;
+        }
+
+        .value-card p {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f1f3d;
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .content-card {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="logo-section">
+                <img src="{% static 'myapp/images/logo.png' %}" alt="Sakay Logo" class="logo-img">
+                <span class="logo-text">SAKAY</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'routes_list' %}">Routes</a></li>
+                <li><a href="{% url 'about' %}">About</a></li>
+                <li><a href="{% url 'contact' %}">Contact</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li><a href="{% url 'profile' %}">Profile</a></li>
+                    <li>
+                        <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="logout-btn">Logout</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'register' %}">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="hero">
+        <h1>About Sakay Transportation</h1>
+        <p>Your Trusted Booking Companion since 2025</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="content-card">
+            <h2> Who We Are</h2>
+            <p>
+                Sakay is a modern student transportation booking system designed to make daily commutes 
+                safe, reliable, and convenient for students across Biliran Province. We connect students 
+                from Culaba, Kawayan, and Almeria municipalities to Naval, the provincial capital.
+            </p>
+            <p>
+                Our platform revolutionizes student transportation by offering features like real-time tracking, 
+                secure online payments, and flexible scheduling options. We understand the importance of safe 
+                and reliable transportation for students, and we're committed to providing the best service possible.
+            </p>
+        </div>
+
+        <!-- Mission & Vision -->
+        <div class="mission-vision">
+            <div class="mv-card">
+                <h3> Our Mission</h3>
+                <p>
+                    To provide safe, reliable, and affordable transportation services for students in Biliran Province, 
+                    ensuring every student can access education without transportation barriers.
+                </p>
+            </div>
+
+            <div class="mv-card">
+                <h3> Our Vision</h3>
+                <p>
+                    To become the leading student transportation service in Eastern Visayas, known for safety, 
+                    reliability, and innovative technology solutions.
+                </p>
+            </div>
+        </div>
+
+        <!-- Core Values -->
+        <div class="content-card">
+            <h2> Our Core Values</h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <h4>Safety First</h4>
+                    <p>Student safety is our top priority. All vehicles and drivers are thoroughly vetted.</p>
+                </div>
+
+                <div class="value-card">
+                    <h4>Reliability</h4>
+                    <p>Consistent, on-time service you can count on every single day.</p>
+                </div>
+
+                <div class="value-card">
+                    <h4>Integrity</h4>
+                    <p>Honest, transparent operations with fair pricing and ethical practices.</p>
+                </div>
+
+                <div class="value-card">
+                    <h4>Innovation</h4>
+                    <p>Leveraging technology to improve the transportation experience.</p>
+                </div>
+
+                <div class="value-card">
+                    <h4>Community</h4>
+                    <p>Supporting local communities and helping students access education.</p>
+                </div>
+
+                <div class="value-card">
+                    <h4>Sustainability</h4>
+                    <p>Committed to eco-friendly practices and reducing our carbon footprint.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- What We Offer -->
+        <div class="content-card">
+            <h2>What We Offer</h2>
+            <p>
+                <strong>Regular Routes:</strong> Daily transportation from Culaba, Kawayan, and Almeria to Naval with 
+                multiple pickup and drop-off points.
+            </p>
+            <p>
+                <strong>Easy Booking:</strong> Book your trips online with our user-friendly booking system. 
+                No more waiting at uncertain pick-up points.
+            </p>
+            <p>
+                <strong>Flexible Payment:</strong> Multiple payment options including cash, GCash, and card payments 
+                for your convenience.
+            </p>
+            <p>
+                <strong> Real-Time Tracking:</strong> Know exactly where your vehicle is and when it will arrive 
+                at your pickup point.
+            </p>
+            <p>
+                <strong> Safety Assured:</strong> All drivers undergo background checks, vehicles are regularly maintained, 
+                and we have 24/7 customer support.
+            </p>
+            <p>
+                <strong>Parent Notifications:</strong> Keep parents informed with automatic notifications about 
+                pickup, drop-off, and trip status.
+            </p>
+        </div>
+
+        <!-- Coverage -->
+        <div class="content-card">
+            <h2> Our Coverage</h2>
+            <p>
+                <strong>From:</strong> Culaba, Kawayan, Almeria<br>
+                <strong>To:</strong> Naval (Provincial Capital)<br>
+                <strong>Service Hours:</strong> Morning (5:00 AM - 8:30 AM) and Afternoon (3:00 PM - 7:30 PM)<br>
+                <strong>Operating Days:</strong> Monday to Saturday
+            </p>
+        </div>
+
+        <!-- Why Choose Us -->
+        <div class="content-card">
+            <h2>Why Students Choose Sakay</h2>
+            <p>
+                 <strong>Affordable Fares:</strong> Competitive pricing with student discounts<br>
+                 <strong>Convenient Schedules:</strong> Multiple daily trips to fit your class schedule<br>
+                 <strong>Safe & Comfortable:</strong> Well-maintained vehicles with experienced drivers<br>
+                 <strong>Easy to Use:</strong> Simple online booking and payment system<br>
+                 <strong>Reliable Service:</strong> On-time arrivals and departures<br>
+                 <strong>Customer Support:</strong> Friendly support team ready to help
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Sakay Transportation System. All rights reserved.</p>
+            <p>Your Trusted Booking Companion</p>
+            <p>Serving Biliran Province with pride since 2025</p>
+        </div>
+    </footer>
+</body>
+</html>

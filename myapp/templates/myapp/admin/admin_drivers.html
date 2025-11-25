@@ -1,0 +1,63 @@
+
+<!-- admin_reports.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Reports - Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; }
+        .navbar { background: #DC143C; padding: 1rem 2rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; }
+        .container { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
+        .page-header { background: linear-gradient(135deg, #DC143C, #A01028); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem; }
+        .stat-card { background: white; padding: 2rem; border-radius: 12px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .stat-number { font-size: 3rem; font-weight: 700; color: #DC143C; }
+        .stat-label { color: #64748b; margin-top: 0.5rem; }
+        .chart-section { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'admin_dashboard' %}">🚍 SAKAY ADMIN</a>
+        <a href="{% url 'admin_reports' %}">Reports</a>
+    </div>
+    <div class="container">
+        <div class="page-header">
+            <h1> Reports & Analytics</h1>
+            <p>View system performance and statistics</p>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">₱{{ total_revenue|floatformat:2 }}</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
+            {% for item in bookings_by_status %}
+            <div class="stat-card">
+                <div class="stat-number">{{ item.count }}</div>
+                <div class="stat-label">{{ item.status }} Bookings</div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="chart-section">
+            <h2 style="color: #DC143C; margin-bottom: 2rem;">Monthly Revenue Trend</h2>
+            {% if monthly_revenue %}
+            <div style="display: flex; align-items: flex-end; gap: 1rem; height: 300px; border-bottom: 2px solid #e2e8f0;">
+                {% for item in monthly_revenue %}
+                <div style="flex: 1; background: linear-gradient(180deg, #DC143C, #A01028); border-radius: 8px 8px 0 0; height: {% widthratio item.total 10000 100 %}%; position: relative;">
+                    <div style="position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 0.85rem; color: #64748b;">
+                        {{ item.month|date:"M" }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p style="text-align: center; color: #64748b; padding: 4rem;">No revenue data available</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

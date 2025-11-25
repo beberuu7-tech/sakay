@@ -1,0 +1,430 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Trips - Sakay Driver</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #1a1a1a;
+            background: #f5f7fa;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: #FF8C00;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .driver-badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: inherit;
+            padding: 0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, #FF8C00 0%, #FF6B00 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .filter-tab {
+            padding: 0.75rem 1.5rem;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .filter-tab:hover, .filter-tab.active {
+            background: linear-gradient(135deg, #FF8C00 0%, #FF6B00 100%);
+            color: white;
+            border-color: #FF8C00;
+            transform: translateY(-2px);
+        }
+
+        /* Trip Card */
+        .trip-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .trip-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .trip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .trip-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #FF8C00;
+        }
+
+        .status-badge {
+            padding: 0.6rem 1.2rem;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-badge.SCHEDULED {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge.IN_PROGRESS {
+            background: #cfe2ff;
+            color: #084298;
+        }
+
+        .status-badge.COMPLETED {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge.CANCELLED {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .trip-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .detail-item .icon {
+            font-size: 1.3rem;
+        }
+
+        .detail-item strong {
+            color: #FF8C00;
+        }
+
+        .trip-actions {
+            display: flex;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid #f0f0f0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #FF8C00 0%, #FF6B00 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .empty-state .icon {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        .empty-state h2 {
+            color: #FF8C00;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state p {
+            color: #64748b;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f1f3d;
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .trip-details {
+                grid-template-columns: 1fr;
+            }
+
+            .trip-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'driver_dashboard' %}" class="logo-section">
+                <img src="{% static 'myapp/images/logo.png' %}" alt="Sakay Logo" class="logo-img">
+                <span class="logo-text">SAKAY<span class="driver-badge">DRIVER</span></span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'driver_dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'driver_trips' %}">My Trips</a></li>
+                <li><a href="{% url 'driver_schedule' %}">Schedule</a></li>
+                <li><a href="{% url 'driver_earnings' %}">Earnings</a></li>
+                <li><a href="{% url 'driver_profile' %}">Profile</a></li>
+                <li>
+                    <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h1>🚐 My Trips</h1>
+            <p>Manage all your scheduled and completed trips</p>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <a href="{% url 'driver_trips' %}" class="filter-tab {% if not status_filter %}active{% endif %}">
+                📊 All Trips
+            </a>
+            <a href="?status=SCHEDULED" class="filter-tab {% if status_filter == 'SCHEDULED' %}active{% endif %}">
+                📅 Scheduled
+            </a>
+            <a href="?status=IN_PROGRESS" class="filter-tab {% if status_filter == 'IN_PROGRESS' %}active{% endif %}">
+                🚦 In Progress
+            </a>
+            <a href="?status=COMPLETED" class="filter-tab {% if status_filter == 'COMPLETED' %}active{% endif %}">
+                ✅ Completed
+            </a>
+            <a href="?status=CANCELLED" class="filter-tab {% if status_filter == 'CANCELLED' %}active{% endif %}">
+                ❌ Cancelled
+            </a>
+        </div>
+
+        <!-- Trips List -->
+        {% if trips %}
+            {% for trip in trips %}
+            <div class="trip-card">
+                <div class="trip-header">
+                    <div class="trip-title">{{ trip.route.route_name }}</div>
+                    <span class="status-badge {{ trip.status }}">{{ trip.get_status_display }}</span>
+                </div>
+
+                <div class="trip-details">
+                    <div class="detail-item">
+                        <span class="icon">📅</span>
+                        <div><strong>Date:</strong> {{ trip.trip_date }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="icon">⏰</span>
+                        <div><strong>Time:</strong> {{ trip.schedule.departure_time }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="icon">🚀</span>
+                        <div><strong>From:</strong> {{ trip.route.origin }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="icon">🎯</span>
+                        <div><strong>To:</strong> {{ trip.route.destination }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="icon">👥</span>
+                        <div><strong>Passengers:</strong> {{ trip.bookings.count }}</div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="icon">🚐</span>
+                        <div><strong>Vehicle:</strong> {{ trip.route.vehicle.plate_number }}</div>
+                    </div>
+                </div>
+
+                <div class="trip-actions">
+                    <a href="{% url 'driver_trip_detail' trip.id %}" class="btn btn-primary">View Details</a>
+                    {% if trip.status == 'SCHEDULED' %}
+                    <a href="{% url 'driver_start_trip' trip.id %}" class="btn btn-success">🚀 Start Trip</a>
+                    {% elif trip.status == 'IN_PROGRESS' %}
+                    <a href="{% url 'driver_complete_trip' trip.id %}" class="btn btn-success">✅ Complete Trip</a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-state">
+                <div class="icon">🚐</div>
+                <h2>No Trips Found</h2>
+                <p>{% if status_filter %}No trips with {{ status_filter }} status.{% else %}You don't have any trips assigned yet.{% endif %}</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Sakay Transportation System. All rights reserved.</p>
+            <p>Driver Portal - Drive Safe, Arrive Safe</p>
+        </div>
+    </footer>
+</body>
+</html>

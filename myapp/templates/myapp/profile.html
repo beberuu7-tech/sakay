@@ -1,0 +1,494 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Sakay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #1a1a1a;
+            background: #f5f7fa;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: #1A3D8F;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            height: 60px;
+            width: 60px;
+            border-radius: 50%;
+        }
+
+        .logo-text {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #FFD700;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            font-family: inherit;
+            padding: 0;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .profile-picture-section {
+            position: relative;
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid #1A3D8F;
+        }
+
+        .profile-picture-placeholder {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1A3D8F 0%, #2E8BC0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: white;
+            font-weight: 700;
+        }
+
+        .profile-info {
+            flex: 1;
+        }
+
+        .profile-info h1 {
+            color: #1A3D8F;
+            margin-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        .profile-badges {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-block;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1A3D8F 0%, #2E8BC0 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 61, 143, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            background: #5a6268;
+        }
+
+        /* Info Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card h2 {
+            color: #1A3D8F;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .info-item {
+            padding: 1.2rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border-left: 4px solid #2E8BC0;
+        }
+
+        .info-item .label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .info-item .value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+
+        .status-active {
+            color: #28a745;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .status-active::before {
+            content: '●';
+            font-size: 1.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #0f1f3d;
+            color: white;
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'home' %}" class="logo-section">
+                <img src="{% static 'myapp/images/logo.png' %}" alt="Sakay Logo" class="logo-img">
+                <span class="logo-text">SAKAY</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="{% url 'home' %}">Home</a></li>
+                <li><a href="{% url 'routes_list' %}">Routes</a></li>
+                <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'my_bookings' %}">My Bookings</a></li>
+                <li><a href="{% url 'profile' %}">Profile</a></li>
+                <li>
+                    <form method="POST" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="logout-btn">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-picture-section">
+                {% if student.profile_picture %}
+                    <img src="{{ student.profile_picture.url }}" alt="Profile Picture" class="profile-picture">
+                {% else %}
+                    <div class="profile-picture-placeholder">
+                        {{ student.user.first_name.0 }}{{ student.user.last_name.0 }}
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="profile-info">
+                <h1>{{ student.user.get_full_name }}</h1>
+                <div class="profile-badges">
+                    <span class="badge badge-primary"> {{ student.student_id }}</span>
+                    <span class="badge badge-success">Active Account</span>
+                </div>
+                <p style="color: #64748b; margin-bottom: 0.5rem;">
+                    {{ student.user.email }}
+                </p>
+                <p style="color: #64748b;">
+                     {{ student.phone_number }}
+                </p>
+
+                <div class="action-buttons">
+                    <a href="{% url 'edit_profile' %}" class="btn btn-primary"> Edit Profile</a>
+                    <a href="{% url 'change_password' %}" class="btn btn-secondary"> Change Password</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personal Information -->
+        <div class="card">
+            <h2> Personal Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="label">Full Name</div>
+                    <div class="value">{{ student.user.get_full_name }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Student ID</div>
+                    <div class="value">{{ student.student_id }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Date of Birth</div>
+                    <div class="value">{{ student.date_of_birth|date:"F d, Y" }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Email Address</div>
+                    <div class="value">{{ student.user.email }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Phone Number</div>
+                    <div class="value">{{ student.phone_number }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Account Status</div>
+                    <div class="value">
+                        {% if student.is_active %}
+                            <span class="status-active">Active</span>
+                        {% else %}
+                            <span style="color: #dc3545;">Inactive</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+                <div class="info-item">
+                    <div class="label">Complete Address</div>
+                    <div class="value">{{ student.address }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Guardian Information -->
+        <div class="card">
+            <h2>Guardian Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="label">Guardian Name</div>
+                    <div class="value">{{ student.guardian_name }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Guardian Contact Number</div>
+                    <div class="value">{{ student.guardian_contact }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Contact -->
+        <div class="card">
+            <h2> Emergency Contact</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="label">Emergency Contact Name</div>
+                    <div class="value">{{ student.emergency_contact_name }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Emergency Contact Number</div>
+                    <div class="value">{{ student.emergency_contact_number }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Details -->
+        <div class="card">
+            <h2> Account Details</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="label">Username</div>
+                    <div class="value">{{ student.user.username }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Member Since</div>
+                    <div class="value">{{ student.created_at|date:"F d, Y" }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="label">Last Updated</div>
+                    <div class="value">{{ student.updated_at|date:"F d, Y" }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Sakay Transportation System. All rights reserved.</p>
+            <p>Your Trusted Booking Companion</p>
+        </div>
+    </footer>
+</body>
+</html>

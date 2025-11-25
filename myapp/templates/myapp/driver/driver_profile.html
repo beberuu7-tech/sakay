@@ -1,0 +1,106 @@
+<!-- driver_profile.html -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile - Driver</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; }
+        .navbar { background: #FF8C00; padding: 1rem 2rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; font-weight: 500; }
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 2rem; }
+        .page-header { background: linear-gradient(135deg, #FF8C00, #FF6B00); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; }
+        .profile-card { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 2rem; }
+        .profile-header { display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem; }
+        .profile-avatar { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #FF8C00, #FF6B00); color: white; display: flex; align-items: center; justify-content: center; font-size: 3rem; font-weight: 700; }
+        .profile-avatar img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; }
+        .profile-info h2 { color: #FF8C00; margin-bottom: 0.5rem; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; }
+        .info-item { padding: 1rem; background: #f8fafc; border-radius: 8px; border-left: 4px solid #FF8C00; }
+        .info-item strong { display: block; color: #FF8C00; margin-bottom: 0.5rem; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'driver_dashboard' %}">🚍 SAKAY DRIVER</a>
+        <a href="{% url 'driver_trips' %}">Trips</a>
+        <a href="{% url 'driver_schedule' %}">Schedule</a>
+        <a href="{% url 'driver_earnings' %}">Earnings</a>
+        <a href="{% url 'driver_profile' %}">Profile</a>
+    </div>
+    <div class="container">
+        <div class="page-header">
+            <h1>👤 My Profile</h1>
+            <p>View your driver information</p>
+        </div>
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    {% if driver.profile_picture %}
+                        <img src="{{ driver.profile_picture.url }}" alt="Profile">
+                    {% else %}
+                        {{ driver.user.first_name.0 }}{{ driver.user.last_name.0 }}
+                    {% endif %}
+                </div>
+                <div class="profile-info">
+                    <h2>{{ driver.user.get_full_name }}</h2>
+                    <p style="color: #64748b;">Driver ID: {{ driver.driver_id }}</p>
+                    <p style="color: #64748b;">📧 {{ driver.user.email }}</p>
+                </div>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>License Number</strong>
+                    {{ driver.license_number }}
+                </div>
+                <div class="info-item">
+                    <strong>License Expiry</strong>
+                    {{ driver.license_expiry }}
+                </div>
+                <div class="info-item">
+                    <strong>Phone Number</strong>
+                    {{ driver.phone_number }}
+                </div>
+                <div class="info-item">
+                    <strong>Status</strong>
+                    {% if driver.is_verified %}✅ Verified{% else %}⏳ Pending{% endif %}
+                </div>
+                <div class="info-item">
+                    <strong>Emergency Contact</strong>
+                    {{ driver.emergency_contact_name }}<br>
+                    {{ driver.emergency_contact_number }}
+                </div>
+                <div class="info-item">
+                    <strong>Address</strong>
+                    {{ driver.address }}
+                </div>
+            </div>
+        </div>
+        {% if driver.vehicle %}
+        <div class="profile-card">
+            <h3 style="color: #FF8C00; margin-bottom: 1.5rem;">🚗 Assigned Vehicle</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <strong>Plate Number</strong>
+                    {{ driver.vehicle.plate_number }}
+                </div>
+                <div class="info-item">
+                    <strong>Type</strong>
+                    {{ driver.vehicle.vehicle_type }}
+                </div>
+                <div class="info-item">
+                    <strong>Model</strong>
+                    {{ driver.vehicle.model }}
+                </div>
+                <div class="info-item">
+                    <strong>Capacity</strong>
+                    {{ driver.vehicle.capacity }} seats
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

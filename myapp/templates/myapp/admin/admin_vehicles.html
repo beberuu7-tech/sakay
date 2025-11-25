@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Vehicles - Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; }
+        .navbar { background: #DC143C; padding: 1rem 2rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; font-weight: 500; }
+        .container { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
+        .page-header { background: linear-gradient(135deg, #DC143C, #A01028); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .btn-add { padding: 1rem 2rem; background: white; color: #DC143C; text-decoration: none; border-radius: 8px; font-weight: 700; }
+        .vehicles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 2rem; }
+        .vehicle-card { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .vehicle-card h3 { color: #DC143C; margin-bottom: 1rem; font-size: 1.5rem; }
+        .info-grid { display: grid; gap: 1rem; }
+        .info-item { padding: 1rem; background: #f8fafc; border-radius: 8px; display: flex; justify-content: space-between; }
+        .info-item strong { color: #DC143C; }
+        .empty-state { text-align: center; padding: 4rem; background: white; border-radius: 12px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'admin_dashboard' %}"> SAKAY ADMIN</a>
+        <a href="{% url 'admin_vehicles' %}">Vehicles</a>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h1> Manage Vehicles</h1>
+                <p>View and manage transportation vehicles</p>
+            </div>
+            <a href="{% url 'admin_add_vehicle' %}" class="btn-add"> Add Vehicle</a>
+        </div>
+
+        {% if vehicles %}
+        <div class="vehicles-grid">
+            {% for vehicle in vehicles %}
+            <div class="vehicle-card">
+                <h3>{{ vehicle.plate_number }}</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span><strong>Type:</strong></span>
+                        <span>{{ vehicle.vehicle_type }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span><strong>Model:</strong></span>
+                        <span>{{ vehicle.model }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span><strong>Capacity:</strong></span>
+                        <span>{{ vehicle.capacity }} seats</span>
+                    </div>
+                    <div class="info-item">
+                        <span><strong>Year:</strong></span>
+                        <span>{{ vehicle.year }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span><strong>Color:</strong></span>
+                        <span>{{ vehicle.color }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span><strong>Status:</strong></span>
+                        <span>{% if vehicle.is_active %} Active{% else %} Inactive{% endif %}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h2> No Vehicles Yet</h2>
+            <p>No vehicles have been added yet.</p>
+            <a href="{% url 'admin_add_vehicle' %}" class="btn-add" style="display: inline-block; margin-top: 2rem;">Add First Vehicle</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

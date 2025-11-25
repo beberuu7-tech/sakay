@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Students - Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f5f7fa; }
+        .navbar { background: #DC143C; padding: 1rem 2rem; }
+        .navbar a { color: white; text-decoration: none; margin: 0 1rem; font-weight: 500; }
+        .container { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
+        .page-header { background: linear-gradient(135deg, #DC143C, #A01028); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; }
+        .students-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; }
+        .student-card { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .student-card h3 { color: #DC143C; margin-bottom: 1rem; }
+        .info-item { padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0; }
+        .info-item strong { color: #DC143C; }
+        .empty-state { text-align: center; padding: 4rem; background: white; border-radius: 12px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <a href="{% url 'admin_dashboard' %}"> SAKAY ADMIN</a>
+        <a href="{% url 'admin_students' %}">Students</a>
+        <a href="{% url 'admin_drivers' %}">Drivers</a>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h1> Manage Students</h1>
+            <p>View and manage registered students</p>
+        </div>
+
+        {% if students %}
+        <div class="students-grid">
+            {% for student in students %}
+            <div class="student-card">
+                <h3>{{ student.user.get_full_name }}</h3>
+                <div class="info-item"><strong>Student ID:</strong> {{ student.student_id }}</div>
+                <div class="info-item"><strong>Email:</strong> {{ student.user.email }}</div>
+                <div class="info-item"><strong>Phone:</strong> {{ student.phone_number }}</div>
+                <div class="info-item"><strong>Registered:</strong> {{ student.created_at|date:"M d, Y" }}</div>
+                <div class="info-item"><strong>Status:</strong> {% if student.is_active %} Active{% else %} Inactive{% endif %}</div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h2> No Students Yet</h2>
+            <p>No students have registered yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
