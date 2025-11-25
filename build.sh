@@ -14,14 +14,22 @@ python manage.py collectstatic --no-input
 # Run migrations
 python manage.py migrate
 
-# Create default superuser (only if it doesn't exist)
-python manage.py create_default_superuser
-```
+# Create admin user if not exists
+python manage.py shell << END
+from django.contrib.auth.models import User
+import os
 
-### Add Environment Variables in Render:
+username = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'admin')
+email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@sakay.com')
+password = os.environ.get('DJANGO_SUPERUSER_PASSWORD', 'admin123')
 
-Go to your Render dashboard → Environment tab → Add:
-```
-DJANGO_SUPERUSER_USERNAME = youradminname
-DJANGO_SUPERUSER_EMAIL = youremail@example.com
-DJANGO_SUPERUSER_PASSWORD = YourSecurePassword123!
+if not User.objects.filter(username=username).exists():
+    admin = User.objects.create_superuser(
+        username=username,
+        email=email,
+        password=password
+    )
+    print(f'✅ Admin user created! Username: {username}')
+else:
+    print(f'✅ Admin user "{username}" already exists')
+END
