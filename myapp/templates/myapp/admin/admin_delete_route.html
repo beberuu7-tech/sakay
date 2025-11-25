@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Route - Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #1a1a1a; }
+        .navbar { background: #DC143C; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo-text { color: white; font-size: 1.8rem; font-weight: 700; text-decoration: none; }
+        .container { max-width: 700px; margin: 4rem auto; padding: 0 2rem; }
+        .confirm-card { background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); text-align: center; }
+        .warning-icon { font-size: 5rem; color: #dc3545; margin-bottom: 1.5rem; }
+        .confirm-card h1 { color: #dc3545; font-size: 2rem; margin-bottom: 1rem; }
+        .confirm-card p { color: #64748b; font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.6; }
+        .route-info { background: #f8d7da; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #dc3545; }
+        .route-info h3 { color: #721c24; margin-bottom: 0.5rem; }
+        .route-info p { color: #721c24; margin: 0.25rem 0; }
+        .btn { padding: 1rem 2rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.3s; margin: 0 0.5rem; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'admin_dashboard' %}" class="logo-text">🚌 SAKAY ADMIN</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="confirm-card">
+            <div class="warning-icon">⚠️</div>
+            <h1>Delete Route?</h1>
+            <p>Are you sure you want to deactivate this route? This action will hide the route from students but preserve booking history.</p>
+            
+            <div class="route-info">
+                <h3>{{ route.route_name }}</h3>
+                <p><strong>Route Code:</strong> {{ route.route_code }}</p>
+                <p><strong>From:</strong> {{ route.origin }} <strong>To:</strong> {{ route.destination }}</p>
+                <p><strong>Fare:</strong> ₱{{ route.fare }}</p>
+            </div>
+
+            <form method="POST" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">🗑️ Yes, Deactivate Route</button>
+                <a href="{% url 'admin_routes' %}" class="btn btn-secondary">✕ Cancel</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

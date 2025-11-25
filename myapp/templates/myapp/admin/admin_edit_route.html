@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Route - Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #1a1a1a; }
+        .navbar { background: #DC143C; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo-text { color: white; font-size: 1.8rem; font-weight: 700; text-decoration: none; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 2rem; }
+        .page-header { background: linear-gradient(135deg, #DC143C 0%, #A01028 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; }
+        .page-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .form-card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a1a1a; }
+        .form-control { width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; }
+        .form-control:focus { outline: none; border-color: #DC143C; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .btn { padding: 1rem 2rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #DC143C 0%, #A01028 100%); color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .alert { padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'admin_dashboard' %}" class="logo-text">🚌 SAKAY ADMIN</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>✏️ Edit Route</h1>
+            <p>Update route information for {{ route.route_name }}</p>
+        </div>
+
+        <div class="form-card">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="route_name">Route Name *</label>
+                        <input type="text" class="form-control" id="route_name" name="route_name" value="{{ route.route_name }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="route_code">Route Code</label>
+                        <input type="text" class="form-control" id="route_code" name="route_code" value="{{ route.route_code }}" readonly style="background: #f8fafc;">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="origin">Origin *</label>
+                        <input type="text" class="form-control" id="origin" name="origin" value="{{ route.origin }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="destination">Destination *</label>
+                        <input type="text" class="form-control" id="destination" name="destination" value="{{ route.destination }}" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="distance">Distance (km)</label>
+                        <input type="number" step="0.1" class="form-control" id="distance" name="distance" value="{{ route.distance_km }}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="estimated_duration">Estimated Duration (minutes)</label>
+                        <input type="number" class="form-control" id="estimated_duration" name="estimated_duration" value="{{ route.estimated_duration }}">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fare">Fare (₱) *</label>
+                        <input type="number" step="0.01" class="form-control" id="fare" name="fare" value="{{ route.fare }}" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="route_type">Route Type</label>
+                        <select class="form-control" id="route_type" name="route_type">
+                            <option value="REGULAR" {% if route.route_type == 'REGULAR' %}selected{% endif %}>Regular</option>
+                            <option value="EXPRESS" {% if route.route_type == 'EXPRESS' %}selected{% endif %}>Express</option>
+                            <option value="SPECIAL" {% if route.route_type == 'SPECIAL' %}selected{% endif %}>Special</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="vehicle">Assign Vehicle</label>
+                    <select class="form-control" id="vehicle" name="vehicle">
+                        <option value="">-- Select Vehicle --</option>
+                        {% for vehicle in vehicles %}
+                        <option value="{{ vehicle.id }}" {% if route.vehicle.id == vehicle.id %}selected{% endif %}>
+                            {{ vehicle.vehicle_number }} - {{ vehicle.make }} {{ vehicle.model }} ({{ vehicle.license_plate }})
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" id="description" name="description" rows="4">{{ route.description }}</textarea>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">✓ Update Route</button>
+                    <a href="{% url 'admin_routes' %}" class="btn btn-secondary">✕ Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

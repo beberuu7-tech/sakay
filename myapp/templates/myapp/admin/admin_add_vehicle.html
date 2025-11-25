@@ -1,0 +1,122 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Vehicle - Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f5f7fa; color: #1a1a1a; }
+        .navbar { background: #DC143C; box-shadow: 0 2px 8px rgba(0,0,0,0.1); position: sticky; top: 0; z-index: 1000; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo-text { color: white; font-size: 1.8rem; font-weight: 700; text-decoration: none; }
+        .container { max-width: 900px; margin: 2rem auto; padding: 0 2rem; }
+        .page-header { background: linear-gradient(135deg, #DC143C 0%, #A01028 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem; }
+        .page-header h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+        .form-card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #1a1a1a; }
+        .form-control { width: 100%; padding: 0.75rem; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; }
+        .form-control:focus { outline: none; border-color: #DC143C; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .btn { padding: 1rem 2rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.3s; }
+        .btn-primary { background: linear-gradient(135deg, #DC143C 0%, #A01028 100%); color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .alert { padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; }
+        .alert-error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .alert-success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'admin_dashboard' %}" class="logo-text">🚌 SAKAY ADMIN</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1>🚐 Add New Vehicle</h1>
+            <p>Register a new vehicle to the system</p>
+        </div>
+
+        <div class="form-card">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="vehicle_number">Vehicle Number *</label>
+                        <input type="text" class="form-control" id="vehicle_number" name="vehicle_number" required placeholder="e.g., V-001">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="license_plate">License Plate *</label>
+                        <input type="text" class="form-control" id="license_plate" name="license_plate" required placeholder="e.g., ABC-1234">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="vehicle_type">Vehicle Type *</label>
+                        <select class="form-control" id="vehicle_type" name="vehicle_type" required>
+                            <option value="">-- Select Type --</option>
+                            <option value="BUS">Bus</option>
+                            <option value="VAN">Van</option>
+                            <option value="JEEPNEY">Jeepney</option>
+                            <option value="SHUTTLE">Shuttle</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="capacity">Capacity (seats) *</label>
+                        <input type="number" class="form-control" id="capacity" name="capacity" required placeholder="0" min="1">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="make">Make/Brand</label>
+                        <input type="text" class="form-control" id="make" name="make" placeholder="e.g., Toyota, Mitsubishi">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="model">Model</label>
+                        <input type="text" class="form-control" id="model" name="model" placeholder="e.g., Hiace, L300">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="year">Year</label>
+                        <input type="number" class="form-control" id="year" name="year" placeholder="2024" min="1900" max="2100">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="color">Color</label>
+                        <input type="text" class="form-control" id="color" name="color" placeholder="e.g., White, Blue">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Notes/Description</label>
+                    <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Additional vehicle information..."></textarea>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">✓ Add Vehicle</button>
+                    <a href="{% url 'admin_vehicles' %}" class="btn btn-secondary">✕ Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

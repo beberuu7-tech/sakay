@@ -977,14 +977,121 @@ def admin_routes(request):
 def admin_add_route(request):
     """Add new route"""
     if request.method == 'POST':
-        # Handle route creation
-        messages.success(request, 'Route added successfully!')
-        return redirect('admin_routes')
+        try:
+            # Get form data
+            route_name = request.POST.get('route_name')
+            route_code = request.POST.get('route_code')
+            origin = request.POST.get('origin')
+            destination = request.POST.get('destination')
+            distance = request.POST.get('distance')
+            estimated_duration = request.POST.get('estimated_duration')
+            fare = request.POST.get('fare')
+            route_type = request.POST.get('route_type')
+            vehicle_id = request.POST.get('vehicle')
+            description = request.POST.get('description', '')
+            
+            # Get vehicle if provided
+            vehicle = None
+            if vehicle_id:
+                vehicle = Vehicle.objects.get(id=vehicle_id)
+            
+            # Create route
+            route = Route.objects.create(
+                route_name=route_name,
+                route_code=route_code,
+                origin=origin,
+                destination=destination,
+                distance=float(distance) if distance else 0,
+                estimated_duration=int(estimated_duration) if estimated_duration else 0,
+                fare=float(fare) if fare else 0,
+                route_type=route_type,
+                vehicle=vehicle,
+                description=description,
+                is_active=True
+            )
+            
+            messages.success(request, f'Route "{route_name}" added successfully!')
+            return redirect('admin_routes')
+            
+        except Vehicle.DoesNotExist:
+            messages.error(request, 'Selected vehicle not found.')
+        except Exception as e:
+            messages.error(request, f'Error adding route: {str(e)}')
     
+    # GET request - show form
     vehicles = Vehicle.objects.filter(is_active=True)
-    context = {'vehicles': vehicles}
+    
+    context = {
+        'vehicles': vehicles,
+        'route_types': [
+            ('REGULAR', 'Regular'),
+            ('EXPRESS', 'Express'),
+            ('SPECIAL', 'Special'),
+        ]
+    }
     return render(request, 'myapp/admin/admin_add_route.html', context)
 
+
+@login_required
+@user_passes_test(is_admin)
+def admin_edit_route(request, route_id):
+    """Edit existing route"""
+    route = get_object_or_404(Route, id=route_id)
+    
+    if request.method == 'POST':
+        try:
+            # Update route data
+            route.route_name = request.POST.get('route_name')
+            route.origin = request.POST.get('origin')
+            route.destination = request.POST.get('destination')
+            route.distance = float(request.POST.get('distance', 0))
+            route.estimated_duration = int(request.POST.get('estimated_duration', 0))
+            route.fare = float(request.POST.get('fare', 0))
+            route.route_type = request.POST.get('route_type')
+            route.description = request.POST.get('description', '')
+            
+            vehicle_id = request.POST.get('vehicle')
+            if vehicle_id:
+                route.vehicle = Vehicle.objects.get(id=vehicle_id)
+            
+            route.save()
+            
+            messages.success(request, f'Route "{route.route_name}" updated successfully!')
+            return redirect('admin_routes')
+            
+        except Exception as e:
+            messages.error(request, f'Error updating route: {str(e)}')
+    
+    vehicles = Vehicle.objects.filter(is_active=True)
+    
+    context = {
+        'route': route,
+        'vehicles': vehicles,
+        'route_types': [
+            ('REGULAR', 'Regular'),
+            ('EXPRESS', 'Express'),
+            ('SPECIAL', 'Special'),
+        ]
+    }
+    return render(request, 'myapp/admin/admin_edit_route.html', context)
+
+
+@login_required
+@user_passes_test(is_admin)
+def admin_delete_route(request, route_id):
+    """Delete/deactivate a route"""
+    route = get_object_or_404(Route, id=route_id)
+    
+    if request.method == 'POST':
+        # Soft delete - just deactivate
+        route.is_active = False
+        route.save()
+        
+        messages.success(request, f'Route "{route.route_name}" has been deactivated.')
+        return redirect('admin_routes')
+    
+    context = {'route': route}
+    return render(request, 'myapp/admin/admin_delete_route.html', context)
 
 @login_required
 @user_passes_test(is_admin)
@@ -1031,11 +1138,44 @@ def admin_vehicles(request):
 def admin_add_vehicle(request):
     """Add new vehicle"""
     if request.method == 'POST':
-        # Handle vehicle creation
-        messages.success(request, 'Vehicle added successfully!')
-        return redirect('admin_vehicles')
+        try:
+            # Get form data
+            vehicle_number = request.POST.get('vehicle_number')
+            vehicle_type = request.POST.get('vehicle_type')
+            make = request.POST.get('make')
+            model = request.POST.get('model')
+            year = request.POST.get('year')
+            capacity = request.POST.get('capacity')
+            license_plate = request.POST.get('license_plate')
+            
+            # Create vehicle
+            vehicle = Vehicle.objects.create(
+                vehicle_number=vehicle_number,
+                vehicle_type=vehicle_type,
+                make=make,
+                model=model,
+                year=int(year) if year else None,
+                capacity=int(capacity) if capacity else 0,
+                license_plate=license_plate,
+                is_active=True
+            )
+            
+            messages.success(request, f'Vehicle "{vehicle_number}" added successfully!')
+            return redirect('admin_vehicles')
+            
+        except Exception as e:
+            messages.error(request, f'Error adding vehicle: {str(e)}')
     
-    return render(request, 'myapp/admin/admin_add_vehicle.html')
+    # GET request - show form
+    context = {
+        'vehicle_types': [
+            ('BUS', 'Bus'),
+            ('VAN', 'Van'),
+            ('JEEPNEY', 'Jeepney'),
+            ('SHUTTLE', 'Shuttle'),
+        ]
+    }
+    return render(request, 'myapp/admin/admin_add_vehicle.html', context)
 
 
 @login_required
